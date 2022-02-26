@@ -13,6 +13,7 @@ public class GameLogic : MonoBehaviour
     [SerializeField]
     private Transform[] _targetGOs;
     private int _currTarget = 1;
+    private int _currZoom = 40;
 
     // Start is called before the first frame update
     void Start()
@@ -35,16 +36,14 @@ public class GameLogic : MonoBehaviour
         //Change targets for _vCams[0]
         if (Input.GetKeyDown(KeyCode.R) == true)
         {
-            //Set new _currTarget
-            if (_currTarget == 1)
-            {
-                _currTarget = 2;
-                _vCams[0].LookAt = _targetGOs[1];
-            } else
-            {
-                _currTarget = 1;
-                _vCams[0].LookAt = _targetGOs[0];
-            }            
+            SwitchTarget();
+        }
+
+        //Zoom in and out on _vCams[0]
+        if (Input.GetKeyDown(KeyCode.Space) == true)
+        {
+            ChangeFoV();
+            
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha1) == true)
@@ -145,5 +144,36 @@ public class GameLogic : MonoBehaviour
                 Debug.Log("GameLogic::ResetVCamsPriorities - nextVCamIndex out of range!");
                 break;
         }
+    }
+
+    private void SwitchTarget()
+    {
+        //Set new _currTarget
+        if (_currTarget == 1)
+        {
+            _currTarget = 2;
+            _vCams[0].LookAt = _targetGOs[1];
+        }
+        else
+        {
+            _currTarget = 1;
+            _vCams[0].LookAt = _targetGOs[0];
+        }
+    }
+
+    private void ChangeFoV()
+    {
+        if(_currZoom == 40)
+        {
+            _currZoom = 60;
+        } else if (_currZoom == 60)
+        {
+            _currZoom = 20;
+        } else if(_currZoom == 20)
+        {
+            _currZoom = 40;
+        }
+
+        _vCams[0].m_Lens.FieldOfView = _currZoom;
     }
 }
